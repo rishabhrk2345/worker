@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.content_found.json",
+  "title": "WorkerContentFoundPayload",
+  "description": "Emitted when a worker identifies a content item (post, article, video, thread) as potentially relevant. Not yet fully analyzed.",
+  "type": "object",
+  "required": ["url", "title", "platform", "relevance_score"],
+  "additionalProperties": false,
+  "properties": {
+    "url":              { "type": "string", "format": "uri" },
+    "title":            { "type": "string" },
+    "platform":         { "type": "string" },
+    "author":           { "type": "string" },
+    "published_at":     { "type": "string", "format": "date-time" },
+    "relevance_score":  { "type": "number", "minimum": 0, "maximum": 1 },
+    "content_type":     { "type": "string", "enum": ["post", "article", "thread", "video", "comment", "review", "job_listing", "news"] },
+    "summary":          { "type": "string", "description": "Brief AI-generated summary" },
+    "initial_signals":  { "type": "array", "items": { "type": "string" }, "description": "Keywords or signals that triggered relevance" },
+    "document_id":      { "type": "string", "format": "uuid", "description": "ID of the Document row created" }
+  }
+}

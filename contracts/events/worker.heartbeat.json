@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.heartbeat.json",
+  "title": "WorkerHeartbeatPayload",
+  "type": "object",
+  "required": ["state", "progress_percent"],
+  "additionalProperties": false,
+  "properties": {
+    "state":                { "type": "string", "description": "Current WorkerState" },
+    "progress_percent":     { "type": "number", "minimum": 0, "maximum": 100 },
+    "current_url":          { "type": "string" },
+    "current_task_summary": { "type": "string" },
+    "pages_fetched":        { "type": "integer" },
+    "budget_consumed_pct":  { "type": "number", "minimum": 0, "maximum": 100 },
+    "tokens_used":          { "type": "integer" },
+    "cost_usd":             { "type": "number" },
+    "queue_depth":          { "type": "integer" }
+  }
+}

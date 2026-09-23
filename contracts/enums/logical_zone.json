@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/enums/logical_zone.json",
+  "title": "LogicalZone",
+  "description": "Logical zones in the 3D command center. Workers are assigned to zones based on their type and current task. The frontend ZoneRegistry maps these to 3D world coordinates. The backend never stores 3D coordinates.",
+  "type": "object",
+  "properties": {
+    "zones": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ZoneDefinition" }
+    }
+  },
+  "definitions": {
+    "ZoneDefinition": {
+      "type": "object",
+      "required": ["id", "label", "description", "stations", "primaryWorkerTypes"],
+      "properties": {
+        "id":                 { "type": "string" },
+        "label":              { "type": "string" },
+        "description":        { "type": "string" },
+        "stations":           { "type": "array", "items": { "$ref": "#/definitions/StationDefinition" } },
+        "primaryWorkerTypes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "StationDefinition": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id":    { "type": "string" },
+        "label": { "type": "string" },
+        "type":  { "type": "string" }
+      }
+    }
+  },
+  "x-zone-enum": [
+    "SUPERVISOR",
+    "DISCOVERY_CITY",
+    "SOURCE_OBSERVATORY",
+    "RESEARCH_LAB",
+    "INTELLIGENCE_LAB",
+    "PRODUCT_CAMPUS",
+    "COMPETITOR_WAR_ROOM",
+    "ACTION_CENTER",
+    "KNOWLEDGE_CORE",
+    "MEMORY_LEARNING",
+    "OPERATIONS",
+    "INVESTIGATION_ROOM"
+  ],
+  "x-zones": [
+    {
+      "id": "SUPERVISOR",
+      "label": "Central Supervisor",
+      "description": "Elevated central platform. The AI Supervisor orchestrates all missions, allocates workers, and monitors global system health.",
+      "stations": [
+        { "id": "supervisor_console", "label": "Mission Console" },
+        { "id": "resource_monitor",   "label": "Resource Monitor" },
+        { "id": "alert_panel",        "label": "Alert Panel" }
+      ],
+      "primaryWorkerTypes": ["supervisor"]
+    },
+    {
+      "id": "DISCOVERY_CITY",
+      "label": "Discovery City",
+      "description": "Workers search the web and social platforms for signals, conversations, and entities. First stage of the intelligence pipeline.",
+      "stations": [
+        { "id": "social_crawler_bay",   "label": "Social Crawler Bay" },
+        { "id": "web_crawler_bay",      "label": "Web Crawler Bay" },
+        { "id": "search_console",       "label": "Search Console" },
+        { "id": "news_feed",            "label": "News Feed Station" },
+        { "id": "forum_station",        "label": "Forum Station" },
+        { "id": "review_station",       "label": "Review Station" },
+        { "id": "trend_monitor",        "label": "Trend Monitor" }
+      ],
+      "primaryWorkerTypes": ["social_discovery", "web_discovery", "search", "news", "forum", "review", "trend_discovery"]
+    },
+    {
+      "id": "SOURCE_OBSERVATORY",
+      "label": "Source Observatory",
+      "description": "Displays the health, activity, and rate-limit status of every connected source platform.",
+      "stations": [
+        { "id": "reddit_station",    "label": "Reddit",    "type": "source_station" },
+        { "id": "x_station",         "label": "X",         "type": "source_station" },
+        { "id": "linkedin_station",  "label": "LinkedIn",  "type": "source_station" },
+        { "id": "instagram_station", "label": "Instagram", "type": "source_station" },
+        { "id": "facebook_station",  "label": "Facebook",  "type": "source_station" },
+        { "id": "threads_station",   "label": "Threads",   "type": "source_station" },
+        { "id": "youtube_station",   "label": "YouTube",   "type": "source_station" },
+        { "id": "tiktok_station",    "label": "TikTok",    "type": "source_station" },
+        { "id": "news_station",      "label": "News",      "type": "source_station" },
+        { "id": "forums_station",    "label": "Forums",    "type": "source_station" },
+        { "id": "reviews_station",   "label": "Reviews",   "type": "source_station" },
+        { "id": "web_station",       "label": "Web",       "type": "source_station" },
+        { "id": "search_station",    "label": "Search",    "type": "source_station" }
+      ],
+      "primaryWorkerTypes": []
+    },
+    {
+      "id": "RESEARCH_LAB",
+      "label": "Research Lab",
+      "description": "Deep research workers perform multi-source investigations, gather evidence, and validate claims.",
+      "stations": [
+        { "id": "deep_research_pod",    "label": "Deep Research Pod" },
+        { "id": "conversation_pod",     "label": "Conversation Analysis Pod" },
+        { "id": "competitor_research",  "label": "Competitor Research Pod" },
+        { "id": "market_research",      "label": "Market Research Pod" },
+        { "id": "evidence_chamber",     "label": "Evidence Chamber" },
+        { "id": "verification_chamber", "label": "Verification Chamber" }
+      ],
+      "primaryWorkerTypes": ["deep_research", "conversation_research", "competitor_research", "evidence", "verification"]
+    },
+    {
+      "id": "INTELLIGENCE_LAB",
+      "label": "Intelligence Lab",
+      "description": "Analysis workers process content: entity extraction, problem detection, intent recognition, product matching.",
+      "stations": [
+        { "id": "content_analyzer",    "label": "Content Analyzer" },
+        { "id": "entity_extractor",    "label": "Entity Extractor" },
+        { "id": "problem_detector",    "label": "Problem Detector" },
+        { "id": "intent_recognizer",   "label": "Intent Recognizer" },
+        { "id": "sentiment_analyzer",  "label": "Sentiment Analyzer" },
+        { "id": "portfolio_matcher",   "label": "Portfolio Matcher" },
+        { "id": "opportunity_detector","label": "Opportunity Detector" }
+      ],
+      "primaryWorkerTypes": ["content_analyzer", "entity_extractor", "problem_detector", "intent_recognizer", "product_matcher", "portfolio_analyzer"]
+    },
+    {
+      "id": "PRODUCT_CAMPUS",
+      "label": "Product Campus",
+      "description": "Dynamic zone with one pod per product. Workers route intelligence into the appropriate product pod.",
+      "stations": [],
+      "x-note": "Stations are dynamically generated — one per product in the organization's portfolio.",
+      "primaryWorkerTypes": ["product_feedback", "feature_gap", "demand_analyzer", "positioning", "cross_sell", "product_brain"]
+    },
+    {
+      "id": "COMPETITOR_WAR_ROOM",
+      "label": "Competitor War Room",
+      "description": "Persistent monitoring of competitor digital twins. Detects changes in features, pricing, messaging, and positioning.",
+      "stations": [
+        { "id": "competitor_monitor", "label": "Competitor Monitor" },
+        { "id": "pricing_watch",      "label": "Pricing Watch" },
+        { "id": "feature_watch",      "label": "Feature Watch" },
+        { "id": "content_watch",      "label": "Content Watch" }
+      ],
+      "primaryWorkerTypes": ["competitor_discovery", "competitor_research"]
+    },
+    {
+      "id": "ACTION_CENTER",
+      "label": "Action Center",
+      "description": "Action workers draft responses, manage leads, create CRM records, and publish approved content.",
+      "stations": [
+        { "id": "lead_station",     "label": "Lead Station" },
+        { "id": "crm_station",      "label": "CRM Station" },
+        { "id": "outreach_station", "label": "Outreach Station" },
+        { "id": "content_station",  "label": "Content Station" },
+        { "id": "approval_queue",   "label": "Approval Queue" }
+      ],
+      "primaryWorkerTypes": ["lead", "crm", "outreach_draft", "content", "publishing"]
+    },
+    {
+      "id": "KNOWLEDGE_CORE",
+      "label": "Knowledge Core",
+      "description": "The world model knowledge graph. Entities, relationships, claims, evidence, and events visualized as a force-directed graph.",
+      "stations": [
+        { "id": "entity_graph",      "label": "Entity Graph" },
+        { "id": "relationship_view", "label": "Relationship View" },
+        { "id": "event_timeline",    "label": "Event Timeline" }
+      ],
+      "primaryWorkerTypes": ["relationship_graph"]
+    },
+    {
+      "id": "MEMORY_LEARNING",
+      "label": "Memory & Learning Center",
+      "description": "The learning system. Displays recent learning events, model updates, strategy changes, and outcome feedback.",
+      "stations": [
+        { "id": "feedback_processor", "label": "Feedback Processor" },
+        { "id": "memory_core",        "label": "Memory Core" },
+        { "id": "strategy_updater",   "label": "Strategy Updater" }
+      ],
+      "primaryWorkerTypes": ["outcome", "feedback", "memory", "strategy_learning", "evaluation"]
+    },
+    {
+      "id": "OPERATIONS",
+      "label": "Worker Operations Center",
+      "description": "Operational health dashboard. Shows all worker states, queues, resource budgets, errors.",
+      "stations": [
+        { "id": "worker_health",  "label": "Worker Health" },
+        { "id": "queue_monitor",  "label": "Queue Monitor" },
+        { "id": "budget_monitor", "label": "Budget Monitor" },
+        { "id": "error_console",  "label": "Error Console" }
+      ],
+      "primaryWorkerTypes": []
+    },
+    {
+      "id": "INVESTIGATION_ROOM",
+      "label": "Investigation Room",
+      "description": "Dedicated space for a single active investigation. Questions, evidence, claims, timeline, and worker involvement visualized.",
+      "stations": [
+        { "id": "investigation_board", "label": "Investigation Board" },
+        { "id": "evidence_wall",       "label": "Evidence Wall" },
+        { "id": "timeline_display",    "label": "Timeline Display" }
+      ],
+      "primaryWorkerTypes": ["deep_research", "evidence", "verification"]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.search_started.json",
+  "title": "WorkerSearchStartedPayload",
+  "type": "object",
+  "required": ["query", "query_type", "platform"],
+  "additionalProperties": false,
+  "properties": {
+    "query":        { "type": "string" },
+    "query_type":   { "type": "string" },
+    "platform":     { "type": "string" },
+    "filters":      { "type": "object", "additionalProperties": true },
+    "expected_results_count": { "type": "integer" }
+  }
+}

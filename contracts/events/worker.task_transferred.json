@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.task_transferred.json",
+  "title": "WorkerTaskTransferredPayload",
+  "description": "Emitted when a worker delegates a task to another worker. This drives the 3D data package animation. The data package tooltip shows this payload.",
+  "type": "object",
+  "required": ["to_worker_type", "task_type", "task_id", "from_zone", "to_zone"],
+  "additionalProperties": false,
+  "properties": {
+    "to_worker_id":    { "type": "string", "format": "uuid" },
+    "to_worker_type":  { "type": "string" },
+    "to_worker_name":  { "type": "string" },
+    "task_type":       { "type": "string" },
+    "task_id":         { "type": "string", "format": "uuid" },
+    "from_zone":       { "type": "string", "description": "Originating LogicalZone for data package animation" },
+    "to_zone":         { "type": "string", "description": "Destination LogicalZone for data package animation" },
+    "package_contents": {
+      "type": "object",
+      "description": "Summary of what is in the data package. Shown in the 3D tooltip.",
+      "properties": {
+        "source":            { "type": "string" },
+        "url":               { "type": "string" },
+        "problem":           { "type": "string" },
+        "entity":            { "type": "string" },
+        "intent":            { "type": "string" },
+        "evidence_count":    { "type": "integer" },
+        "confidence":        { "type": "number" },
+        "product_candidates":{ "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "priority":        { "type": "string", "enum": ["low", "normal", "high", "critical"] },
+    "reason":          { "type": "string" }
+  }
+}

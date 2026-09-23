@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Backend Tests ──────────────────────────────────────────────────────────
+  backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv==0.5.18
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Validate contracts
+        run: |
+          uv run python ../../scripts/validate-contracts.py
+          uv run python ../../scripts/gen-python-types.py
+
+      - name: Run tests
+        env:
+          DATABASE_URL: "sqlite+aiosqlite:///./test.db"
+          REDIS_URL: "redis://localhost:6379/0"
+          JWT_SECRET: "test-secret-key-minimum-32-characters-long"
+          CREDENTIAL_ENCRYPTION_KEY: "dGhpcy1pcy1hLTMyLWJ5dGUtc2VjcmV0LWtleS0xMjM0NTY="
+          APP_ENV: "test"
+        run: uv run pytest tests/ -v --tb=short --no-header
+
+  # ── Frontend Type Check ────────────────────────────────────────────────────
+  frontend:
+    name: Frontend Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: apps/web/package.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate TS types from contracts
+        run: node ../../scripts/gen-ts-types.js
+
+      - name: Type check
+        run: npm run type-check
+
+  # ── Contract Validation ────────────────────────────────────────────────────
+  contracts:
+    name: Contract Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install jsonschema
+        run: pip install jsonschema==4.23.0
+
+      - name: Validate all contracts
+        run: python scripts/validate-contracts.py

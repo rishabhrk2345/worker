@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.state_changed.json",
+  "title": "WorkerStateChangedPayload",
+  "description": "Emitted when a worker transitions between states. This is the primary driver of 3D worker animation changes.",
+  "type": "object",
+  "required": ["from_state", "to_state"],
+  "additionalProperties": false,
+  "properties": {
+    "from_state":    { "type": "string", "description": "Previous WorkerState" },
+    "to_state":      { "type": "string", "description": "New WorkerState" },
+    "reason":        { "type": "string", "description": "Human-readable reason for state change" },
+    "task_type":     { "type": "string", "description": "Type of task being started in the new state" },
+    "estimated_duration_seconds": { "type": "integer" }
+  }
+}

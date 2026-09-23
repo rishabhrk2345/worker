@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.entity_detected.json",
+  "title": "WorkerEntityDetectedPayload",
+  "type": "object",
+  "required": ["entity_name", "entity_type", "confidence"],
+  "additionalProperties": false,
+  "properties": {
+    "entity_name":     { "type": "string" },
+    "entity_type":     { "type": "string", "enum": ["person", "company", "product", "competitor", "technology", "platform", "topic", "industry"] },
+    "confidence":      { "type": "number", "minimum": 0, "maximum": 1 },
+    "aliases":         { "type": "array", "items": { "type": "string" } },
+    "source_url":      { "type": "string" },
+    "entity_id":       { "type": "string", "format": "uuid", "description": "ID of the Entity row created or matched" },
+    "is_new_entity":   { "type": "boolean" },
+    "merged_with":     { "type": "string", "format": "uuid", "description": "If merged with existing entity, its ID" }
+  }
+}

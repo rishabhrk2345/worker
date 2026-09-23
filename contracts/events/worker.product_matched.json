@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.product_matched.json",
+  "title": "WorkerProductMatchedPayload",
+  "description": "Emitted when the portfolio router matches a signal to one or more products. Contains explainable component scores, not just a single mysterious number.",
+  "type": "object",
+  "required": ["signal_summary", "primary_product_id", "overall_score", "match_components", "explanation"],
+  "additionalProperties": false,
+  "properties": {
+    "signal_summary":         { "type": "string", "description": "Brief description of the signal being matched" },
+    "primary_product_id":     { "type": "string", "format": "uuid" },
+    "primary_product_name":   { "type": "string" },
+    "secondary_product_id":   { "type": "string", "format": "uuid" },
+    "secondary_product_name": { "type": "string" },
+    "cross_sell_product_id":  { "type": "string", "format": "uuid" },
+    "cross_sell_product_name":{ "type": "string" },
+    "overall_score":          { "type": "number", "minimum": 0, "maximum": 1 },
+    "match_components": {
+      "type": "object",
+      "required": ["problem_fit", "persona_fit", "industry_fit", "intent_fit"],
+      "properties": {
+        "problem_fit":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "persona_fit":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "industry_fit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "intent_fit":   { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "explanation":          { "type": "string", "description": "Human-readable explanation of why this product was matched" },
+    "match_reasons":        { "type": "array", "items": { "type": "string" } },
+    "non_match_reasons":    { "type": "array", "items": { "type": "string" }, "description": "Why other products were NOT matched" },
+    "portfolio_match_id":   { "type": "string", "format": "uuid" }
+  }
+}

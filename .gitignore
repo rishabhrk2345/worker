@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Local dev databases (SQLite fallback) — never commit
+apps/api/*.db
+*.sqlite3
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+
+# Misc
+.DS_Store
+*.log

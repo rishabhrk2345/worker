@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.competitor_event_detected.json",
+  "title": "WorkerCompetitorEventDetectedPayload",
+  "type": "object",
+  "required": ["competitor_name", "event_type", "description", "source_url"],
+  "additionalProperties": false,
+  "properties": {
+    "competitor_id":    { "type": "string", "format": "uuid" },
+    "competitor_name":  { "type": "string" },
+    "event_type":       { "type": "string", "enum": ["new_feature", "new_product", "pricing_change", "positioning_change", "new_integration", "new_partnership", "new_campaign", "new_content_strategy", "new_target_market", "job_posting_signal"] },
+    "description":      { "type": "string" },
+    "source_url":       { "type": "string", "format": "uri" },
+    "detected_at":      { "type": "string", "format": "date-time" },
+    "impact_score":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "evidence_quote":   { "type": "string" },
+    "before_state":     { "type": "string" },
+    "after_state":      { "type": "string" },
+    "products_affected":{ "type": "array", "items": { "type": "string", "format": "uuid" } }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.approval_requested.json",
+  "title": "WorkerApprovalRequestedPayload",
+  "description": "Emitted when a worker requires human approval before executing an action. Triggers the Temporal workflow signal wait.",
+  "type": "object",
+  "required": ["action_type", "action_id", "draft_content", "reason_for_approval"],
+  "additionalProperties": false,
+  "properties": {
+    "action_type":          { "type": "string" },
+    "action_id":            { "type": "string", "format": "uuid" },
+    "draft_content":        { "type": "string", "description": "The draft action content for human review" },
+    "reason_for_approval":  { "type": "string" },
+    "risk_level":           { "type": "string", "enum": ["low", "medium", "high"] },
+    "target_entity":        { "type": "string" },
+    "target_platform":      { "type": "string" },
+    "product_context":      { "type": "string" },
+    "evidence_summary":     { "type": "string" },
+    "expires_at":           { "type": "string", "format": "date-time" }
+  }
+}

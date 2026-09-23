@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.problem_detected.json",
+  "title": "WorkerProblemDetectedPayload",
+  "description": "Emitted when a worker identifies a customer problem in content. The problem is independent of product matching.",
+  "type": "object",
+  "required": ["problem_statement", "confidence", "source_url"],
+  "additionalProperties": false,
+  "properties": {
+    "problem_statement":  { "type": "string", "description": "Clear, specific statement of the problem detected" },
+    "problem_category":   { "type": "string", "description": "e.g. 'attribution', 'revenue_tracking', 'refund_management'" },
+    "confidence":         { "type": "number", "minimum": 0, "maximum": 1 },
+    "source_url":         { "type": "string", "format": "uri" },
+    "evidence_quote":     { "type": "string", "description": "Verbatim quote from the source that demonstrates the problem" },
+    "industry":           { "type": "string" },
+    "persona_signals":    { "type": "array", "items": { "type": "string" }, "description": "Signals about the person experiencing the problem" },
+    "urgency":            { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "problem_id":         { "type": "string", "format": "uuid", "description": "ID of the Problem entity created/updated" }
+  }
+}

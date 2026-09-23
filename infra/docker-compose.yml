@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL + pgvector ─────────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aimarketing-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: aimarketing_os
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d aimarketing_os"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── PgBouncer — connection pooler ────────────────────────────────────────
+  pgbouncer:
+    image: edoburu/pgbouncer:1.22.1
+    container_name: aimarketing-pgbouncer
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgres://postgres:postgrespassword@postgres:5432/aimarketing_os"
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 200
+      DEFAULT_POOL_SIZE: 20
+      SERVER_RESET_QUERY: DISCARD ALL
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: aimarketing-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Temporal ──────────────────────────────────────────────────────────────
+  temporal:
+    image: temporalio/auto-setup:1.24.2
+    container_name: aimarketing-temporal
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgrespassword
+      - POSTGRES_SEEDS=postgres
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    ports:
+      - "7233:7233"
+    volumes:
+      - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+    healthcheck:
+      test: ["CMD", "temporal", "workflow", "list", "--address", "localhost:7233"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  temporal-ui:
+    image: temporalio/ui:2.26.2
+    container_name: aimarketing-temporal-ui
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    ports:
+      - "8080:8080"
+
+  # ── FastAPI Backend ───────────────────────────────────────────────────────
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: aimarketing-api
+    restart: unless-stopped
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgrespassword@pgbouncer:5432/aimarketing_os
+      - REDIS_URL=redis://redis:6379/0
+      - TEMPORAL_HOST=temporal:7233
+      - SIMULATION_MODE=${SIMULATION_MODE:-false}
+    env_file:
+      - ../.env
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/health/ready || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ── Next.js Frontend ──────────────────────────────────────────────────────
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    container_name: aimarketing-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8000
+      - SIMULATION_MODE=${SIMULATION_MODE:-false}
+    ports:
+      - "3000:3000"
+
+  # ── Temporal Worker ───────────────────────────────────────────────────────
+  temporal-worker:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: aimarketing-temporal-worker
+    restart: unless-stopped
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+    command: ["python", "-m", "temporal.worker"]
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgrespassword@pgbouncer:5432/aimarketing_os
+      - REDIS_URL=redis://redis:6379/0
+      - TEMPORAL_HOST=temporal:7233
+    env_file:
+      - ../.env
+
+volumes:
+  postgres_data:
+  redis_data:

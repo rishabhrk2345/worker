@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.page_fetched.json",
+  "title": "WorkerPageFetchedPayload",
+  "type": "object",
+  "required": ["url", "http_status", "content_length_bytes"],
+  "additionalProperties": false,
+  "properties": {
+    "url":                   { "type": "string", "format": "uri" },
+    "http_status":           { "type": "integer" },
+    "content_length_bytes":  { "type": "integer" },
+    "content_hash":          { "type": "string", "description": "SHA-256 of normalized content. Used for deduplication." },
+    "fetch_duration_ms":     { "type": "integer" },
+    "page_type":             { "type": "string", "description": "e.g. 'thread', 'comment', 'article', 'pricing_page'" },
+    "browser_rendered":      { "type": "boolean" },
+    "pages_fetched_total":   { "type": "integer", "description": "Cumulative pages fetched in this run" },
+    "pages_budget_remaining":{ "type": "integer" }
+  }
+}

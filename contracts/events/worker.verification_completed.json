@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.verification_completed.json",
+  "title": "WorkerVerificationCompletedPayload",
+  "description": "Emitted when the Critic Worker completes verification of a claim.",
+  "type": "object",
+  "required": ["claim_id", "verdict", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "claim_id":          { "type": "string", "format": "uuid" },
+    "verdict":           { "type": "string", "enum": ["PASS", "RESEARCH_AGAIN", "LOW_CONFIDENCE", "CONTRADICTED"] },
+    "reason":            { "type": "string" },
+    "checks_performed":  {
+      "type": "object",
+      "properties": {
+        "source_supports_claim":       { "type": "boolean" },
+        "information_is_current":      { "type": "boolean" },
+        "sources_are_independent":     { "type": "boolean" },
+        "intent_is_genuine":           { "type": "boolean" },
+        "no_correlation_causation_error": { "type": "boolean" },
+        "product_match_is_correct":    { "type": "boolean" },
+        "no_important_contradictions": { "type": "boolean" }
+      }
+    },
+    "contradiction_ids": { "type": "array", "items": { "type": "string", "format": "uuid" } },
+    "new_confidence":    { "type": "number", "minimum": 0, "maximum": 1 },
+    "verification_id":   { "type": "string", "format": "uuid" }
+  }
+}

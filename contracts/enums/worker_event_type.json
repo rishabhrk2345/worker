@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/enums/worker_event_type.json",
+  "title": "WorkerEventType",
+  "description": "All possible worker event types in the AI Marketing Intelligence OS. Every event emitted by any worker must use one of these values as its event_type field.",
+  "type": "string",
+  "enum": [
+    "worker.started",
+    "worker.heartbeat",
+    "worker.state_changed",
+    "worker.completed",
+    "worker.failed",
+    "worker.blocked",
+    "worker.rate_limited",
+    "worker.budget_exhausted",
+
+    "worker.planning_started",
+    "worker.planning_completed",
+
+    "worker.source_opened",
+    "worker.source_closed",
+    "worker.source_health_changed",
+
+    "worker.search_started",
+    "worker.search_completed",
+    "worker.search_failed",
+
+    "worker.page_fetched",
+    "worker.page_rejected",
+
+    "worker.content_found",
+    "worker.content_rejected",
+    "worker.duplicate_detected",
+
+    "worker.comment_found",
+    "worker.conversation_updated",
+
+    "worker.entity_detected",
+    "worker.entity_resolved",
+    "worker.problem_detected",
+    "worker.intent_detected",
+    "worker.anomaly_detected",
+
+    "worker.research_started",
+    "worker.research_step_completed",
+    "worker.stopping_criteria_met",
+
+    "worker.evidence_found",
+    "worker.evidence_rejected",
+    "worker.contradiction_detected",
+
+    "worker.verification_started",
+    "worker.verification_completed",
+
+    "worker.product_matched",
+    "worker.no_product_match",
+    "worker.portfolio_gap_detected",
+    "worker.competitor_event_detected",
+
+    "worker.task_created",
+    "worker.task_transferred",
+    "worker.task_received",
+
+    "worker.action_requested",
+    "worker.approval_requested",
+    "worker.action_approved",
+    "worker.action_rejected",
+    "worker.action_executed",
+    "worker.action_failed",
+
+    "worker.outcome_received",
+    "worker.learning_updated"
+  ],
+  "x-event-count": 49
+}

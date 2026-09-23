@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.intent_detected.json",
+  "title": "WorkerIntentDetectedPayload",
+  "type": "object",
+  "required": ["intent_type", "intent_score", "source_url"],
+  "additionalProperties": false,
+  "properties": {
+    "intent_type":      { "type": "string", "enum": ["interest", "problem", "solution_seeking", "comparing", "high_intent", "purchasing"] },
+    "intent_score":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "commercial_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "urgency_score":    { "type": "number", "minimum": 0, "maximum": 1 },
+    "source_url":       { "type": "string" },
+    "evidence_quotes":  { "type": "array", "items": { "type": "string" } },
+    "conversation_state": { "type": "string", "description": "Updated conversation state" }
+  }
+}

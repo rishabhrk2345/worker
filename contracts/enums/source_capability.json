@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/enums/source_capability.json",
+  "title": "SourceCapability",
+  "description": "Capabilities that a source connector can declare. The orchestration layer only calls methods the connector has declared. Never assume a platform supports all capabilities.",
+  "type": "string",
+  "enum": [
+    "SEARCH",
+    "FETCH",
+    "COMMENTS",
+    "REPLIES",
+    "PUBLIC_ENTITY",
+    "STREAM",
+    "PUBLISH",
+    "ANALYTICS",
+    "BROWSER_RENDER",
+    "HISTORICAL_SEARCH",
+    "INCREMENTAL_SYNC",
+    "RATE_LIMIT_AWARE"
+  ],
+  "x-capability-descriptions": {
+    "SEARCH":            "Connector can execute keyword/semantic search queries and return result lists",
+    "FETCH":             "Connector can fetch a specific URL or item by ID and return its content",
+    "COMMENTS":          "Connector can fetch comments/replies on a given post or page",
+    "REPLIES":           "Connector can fetch threaded replies to a specific comment",
+    "PUBLIC_ENTITY":     "Connector can fetch a public profile or entity page",
+    "STREAM":            "Connector supports real-time streaming of new items",
+    "PUBLISH":           "Connector can publish content (requires explicit permission + autonomy level 4+)",
+    "ANALYTICS":         "Connector can retrieve engagement analytics for owned content",
+    "BROWSER_RENDER":    "Connector uses a headless browser for JavaScript-rendered pages",
+    "HISTORICAL_SEARCH": "Connector can retrieve historical items beyond the default recency window",
+    "INCREMENTAL_SYNC":  "Connector supports cursor-based incremental sync (fetches only new items since last cursor)",
+    "RATE_LIMIT_AWARE":  "Connector has built-in rate limit tracking and will throw RateLimitExceeded"
+  },
+  "x-platform-capabilities": {
+    "reddit":    ["SEARCH", "FETCH", "COMMENTS", "REPLIES", "INCREMENTAL_SYNC", "RATE_LIMIT_AWARE"],
+    "x":         ["SEARCH", "FETCH", "RATE_LIMIT_AWARE"],
+    "linkedin":  ["SEARCH", "FETCH", "PUBLIC_ENTITY", "RATE_LIMIT_AWARE"],
+    "youtube":   ["SEARCH", "FETCH", "COMMENTS", "RATE_LIMIT_AWARE"],
+    "news":      ["SEARCH", "FETCH", "INCREMENTAL_SYNC"],
+    "rss":       ["FETCH", "INCREMENTAL_SYNC"],
+    "web":       ["FETCH", "BROWSER_RENDER", "HISTORICAL_SEARCH"],
+    "search":    ["SEARCH"],
+    "forums":    ["SEARCH", "FETCH", "COMMENTS", "REPLIES"],
+    "reviews":   ["SEARCH", "FETCH", "COMMENTS"]
+  }
+}

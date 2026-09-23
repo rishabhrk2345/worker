@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.failed.json",
+  "title": "WorkerFailedPayload",
+  "type": "object",
+  "required": ["error_type", "error_message"],
+  "additionalProperties": false,
+  "properties": {
+    "error_type":       { "type": "string", "enum": ["source_unavailable", "rate_limited", "auth_failed", "budget_exceeded", "llm_error", "parse_error", "timeout", "dependency_failed", "unknown"] },
+    "error_message":    { "type": "string" },
+    "error_detail":     { "type": "string" },
+    "attempt_number":   { "type": "integer" },
+    "will_retry":       { "type": "boolean" },
+    "retry_at":         { "type": "string", "format": "date-time" },
+    "escalated":        { "type": "boolean" },
+    "partial_results":  { "type": "object", "description": "Any partial work completed before failure" }
+  }
+}

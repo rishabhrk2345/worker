@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.started.json",
+  "title": "WorkerStartedPayload",
+  "description": "Emitted when a worker begins a new run. Establishes the run context.",
+  "type": "object",
+  "required": ["worker_type", "autonomy_level", "mission_objective"],
+  "additionalProperties": false,
+  "properties": {
+    "worker_type":        { "type": "string", "description": "Worker type name from worker_type enum" },
+    "worker_name":        { "type": "string" },
+    "autonomy_level":     { "type": "integer", "minimum": 1, "maximum": 5 },
+    "mission_objective":  { "type": "string" },
+    "budget":             { "$ref": "#/definitions/Budget" },
+    "assigned_products":  { "type": "array", "items": { "type": "string", "format": "uuid" } }
+  },
+  "definitions": {
+    "Budget": {
+      "type": "object",
+      "properties": {
+        "max_time_seconds":  { "type": "integer" },
+        "max_pages":         { "type": "integer" },
+        "max_api_calls":     { "type": "integer" },
+        "max_llm_calls":     { "type": "integer" },
+        "max_tokens":        { "type": "integer" },
+        "max_cost_usd":      { "type": "number" },
+        "max_depth":         { "type": "integer" }
+      }
+    }
+  }
+}

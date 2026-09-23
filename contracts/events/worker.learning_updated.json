@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.learning_updated.json",
+  "title": "WorkerLearningUpdatedPayload",
+  "description": "Emitted when the Learning Worker updates a product brain, source priority, or strategy based on outcomes.",
+  "type": "object",
+  "required": ["learning_type", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "learning_type":     { "type": "string", "enum": ["product_brain_updated", "source_priority_changed", "query_expanded", "worker_routing_updated", "lead_qualification_updated", "scheduling_updated", "strategy_updated"] },
+    "description":       { "type": "string" },
+    "entity_type":       { "type": "string", "description": "What was updated: 'product_brain', 'source', 'worker_type'" },
+    "entity_id":         { "type": "string", "format": "uuid" },
+    "changes":           { "type": "array", "items": { "type": "string" }, "description": "Human-readable list of specific changes" },
+    "triggered_by":      { "type": "string", "enum": ["human_approval", "human_edit", "human_rejection", "false_positive", "conversion", "outcome"] },
+    "learning_event_id": { "type": "string", "format": "uuid" }
+  }
+}

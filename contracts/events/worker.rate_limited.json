@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.rate_limited.json",
+  "title": "WorkerRateLimitedPayload",
+  "type": "object",
+  "required": ["platform", "retry_after_seconds"],
+  "additionalProperties": false,
+  "properties": {
+    "platform":             { "type": "string" },
+    "retry_after_seconds":  { "type": "integer" },
+    "limit_type":           { "type": "string", "enum": ["requests_per_minute", "requests_per_hour", "requests_per_day", "bandwidth"] },
+    "current_usage":        { "type": "integer" },
+    "limit_value":          { "type": "integer" },
+    "backoff_strategy":     { "type": "string", "enum": ["fixed", "exponential", "jitter"] }
+  }
+}

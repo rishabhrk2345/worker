@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-marketing-os/contracts/events/worker.source_opened.json",
+  "title": "WorkerSourceOpenedPayload",
+  "description": "Emitted when a worker begins working with a specific source. Drives the 3D camera to show the worker moving to the source station.",
+  "type": "object",
+  "required": ["platform", "source_name"],
+  "additionalProperties": false,
+  "properties": {
+    "platform":         { "type": "string", "description": "Platform identifier e.g. 'reddit', 'x', 'linkedin'" },
+    "source_name":      { "type": "string", "description": "Human-readable source name" },
+    "source_station_id":{ "type": "string", "description": "Logical station ID in SOURCE_OBSERVATORY zone" },
+    "query":            { "type": "string", "description": "Search query being executed, if any" },
+    "query_type":       { "type": "string", "enum": ["keyword", "semantic", "problem_phrase", "customer_language", "competitor_term", "industry_term"] },
+    "target_community": { "type": "string", "description": "e.g. 'r/saas' for Reddit" },
+    "reason":           { "type": "string", "description": "Why this source was selected" },
+    "expected_value":   { "type": "number", "description": "Estimated information gain score 0–1" }
+  }
+}
