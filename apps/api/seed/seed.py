@@ -330,10 +330,10 @@ async def seed_database():
         # ----------------------------------------------------------------------
         print("\n[4/5] Seeding 15 Monitored Source Platforms...")
         sources_data = [
+            ("youtube", "YouTube", "Video & Comments", ["SEARCH", "FETCH", "COMMENTS", "RATE_LIMIT_AWARE"], "https://youtube.com", 100),
             ("reddit", "Reddit", "Social & Forums", ["SEARCH", "FETCH", "COMMENTS", "REPLIES", "INCREMENTAL_SYNC", "RATE_LIMIT_AWARE"], "https://reddit.com", 60),
             ("x", "X / Twitter", "Social", ["SEARCH", "FETCH", "RATE_LIMIT_AWARE"], "https://x.com", 50),
             ("linkedin", "LinkedIn", "Professional Social", ["SEARCH", "FETCH", "PUBLIC_ENTITY", "RATE_LIMIT_AWARE"], "https://linkedin.com", 30),
-            ("youtube", "YouTube", "Video & Transcripts", ["SEARCH", "FETCH", "COMMENTS", "RATE_LIMIT_AWARE"], "https://youtube.com", 45),
             ("instagram", "Instagram", "Social Media", ["SEARCH", "FETCH", "RATE_LIMIT_AWARE"], "https://instagram.com", 30),
             ("facebook", "Facebook Groups & Pages", "Social Communities", ["SEARCH", "FETCH", "COMMENTS"], "https://facebook.com", 25),
             ("threads", "Threads", "Social", ["SEARCH", "FETCH"], "https://threads.net", 40),
@@ -375,7 +375,7 @@ async def seed_database():
             health = SourceHealth(
                 source_connection_id=conn.id,
                 mode="NORMAL",
-                items_per_hour=142 if s_id == "reddit" else 65,
+                items_per_hour=180 if s_id == "youtube" else 142 if s_id == "reddit" else 65,
                 success_rate=0.99
             )
             session.add(health)
@@ -410,26 +410,26 @@ async def seed_database():
 
         # Create initial fleet of 20 active workers in various states
         initial_fleet = [
-            ("Social Crawler #07", "social_discovery", "DISCOVERING", "DISCOVERY_CITY", "social_crawler_bay", "Reddit", "https://reddit.com/r/saas/comments/xyz123"),
-            ("Reddit Monitor #02", "social_discovery", "SEARCHING", "DISCOVERY_CITY", "social_crawler_bay", "Reddit", "https://reddit.com/r/ecommerce"),
-            ("Web Discovery #01", "web_discovery", "FETCHING", "DISCOVERY_CITY", "web_crawler_bay", "Web", "https://northbeam.io/blog"),
-            ("Deep Researcher #04", "deep_research", "RESEARCHING", "RESEARCH_LAB", "deep_research_pod", "Reddit", "https://reddit.com/r/marketing/attribution"),
-            ("Evidence Validator #01", "evidence", "VERIFYING", "RESEARCH_LAB", "evidence_chamber", None, None),
-            ("Critic Worker #01", "verification", "VERIFYING", "RESEARCH_LAB", "verification_chamber", None, None),
-            ("Content Analyzer #03", "content_analyzer", "ANALYZING", "INTELLIGENCE_LAB", "content_analyzer", None, None),
-            ("Problem Detector #02", "problem_detector", "ANALYZING", "INTELLIGENCE_LAB", "problem_detector", None, None),
-            ("Portfolio Matcher #01", "product_matcher", "MATCHING", "INTELLIGENCE_LAB", "portfolio_matcher", None, None),
-            ("Opportunity Detector #05", "opportunity_detector", "ANALYZING", "INTELLIGENCE_LAB", "opportunity_detector", None, None),
-            ("Competitor Watcher #01", "competitor_discovery", "SEARCHING", "COMPETITOR_WAR_ROOM", "pricing_watch", "Web", "https://triplewhale.com/pricing"),
-            ("Competitor Analyst #02", "competitor_research", "RESEARCHING", "COMPETITOR_WAR_ROOM", "competitor_monitor", "Web", "https://triplewhale.com/changelog"),
-            ("Lead Prospector #01", "lead", "DRAFTING", "ACTION_CENTER", "lead_station", "Reddit", "https://reddit.com/r/saas/comments/abc789"),
-            ("Outreach Drafter #03", "outreach_draft", "WAITING_APPROVAL", "ACTION_CENTER", "outreach_station", None, None),
-            ("Content Generator #02", "content", "DRAFTING", "ACTION_CENTER", "content_station", None, None),
-            ("Outcome Analyst #01", "outcome", "LEARNING", "MEMORY_LEARNING", "feedback_processor", None, None),
-            ("Knowledge Graph Worker", "relationship_graph", "ANALYZING", "KNOWLEDGE_CORE", "entity_graph", None, None),
-            ("ROASSensor Pod Agent", "product_brain", "IDLE", "PRODUCT_CAMPUS", None, None, None),
-            ("RevenueSensor Pod Agent", "product_brain", "IDLE", "PRODUCT_CAMPUS", None, None, None),
-            ("Central Supervisor #01", "supervisor", "PLANNING", "SUPERVISOR", "supervisor_console", None, None),
+            ("YouTube Crawler #01",  "social_discovery", "DISCOVERING", "DISCOVERY_CITY", "social_crawler_bay", "YouTube", "https://youtube.com/watch?v=xYz123"),
+            ("YouTube Monitor #02",  "social_discovery", "SEARCHING",   "DISCOVERY_CITY", "social_crawler_bay", "YouTube", "https://youtube.com/results?search_query=facebook+roas"),
+            ("Web Discovery #01",    "web_discovery",    "FETCHING",    "DISCOVERY_CITY", "web_crawler_bay",    "Web",     "https://northbeam.io/blog"),
+            ("Deep Researcher #04",  "deep_research",    "RESEARCHING", "RESEARCH_LAB",   "deep_research_pod",  "YouTube", "https://youtube.com/watch?v=abc456"),
+            ("Evidence Validator #01","evidence",         "VERIFYING",   "RESEARCH_LAB",   "evidence_chamber",   None,      None),
+            ("Critic Worker #01",    "verification",     "VERIFYING",   "RESEARCH_LAB",   "verification_chamber", None,    None),
+            ("Content Analyzer #03", "content_analyzer", "ANALYZING",   "INTELLIGENCE_LAB","content_analyzer",  None,      None),
+            ("Problem Detector #02", "problem_detector", "ANALYZING",   "INTELLIGENCE_LAB","problem_detector",  None,      None),
+            ("Portfolio Matcher #01","product_matcher",  "MATCHING",    "INTELLIGENCE_LAB","portfolio_matcher", None,      None),
+            ("Opportunity Detector #05","opportunity_detector","ANALYZING","INTELLIGENCE_LAB","opportunity_detector",None, None),
+            ("Competitor Watcher #01","competitor_discovery","SEARCHING","COMPETITOR_WAR_ROOM","pricing_watch",  "Web",    "https://triplewhale.com/pricing"),
+            ("Competitor Analyst #02","competitor_research","RESEARCHING","COMPETITOR_WAR_ROOM","competitor_monitor","Web","https://triplewhale.com/changelog"),
+            ("Lead Prospector #01",  "lead",             "DRAFTING",    "ACTION_CENTER",  "lead_station",       "YouTube","https://youtube.com/watch?v=abc789"),
+            ("Outreach Drafter #03", "outreach_draft",   "WAITING_APPROVAL","ACTION_CENTER","outreach_station", None,      None),
+            ("Content Generator #02","content",          "DRAFTING",    "ACTION_CENTER",  "content_station",    None,      None),
+            ("Outcome Analyst #01",  "outcome",          "LEARNING",    "MEMORY_LEARNING","feedback_processor", None,      None),
+            ("Knowledge Graph Worker","relationship_graph","ANALYZING",  "KNOWLEDGE_CORE", "entity_graph",      None,      None),
+            ("ROASSensor Pod Agent", "product_brain",    "IDLE",        "PRODUCT_CAMPUS", None,                 None,      None),
+            ("RevenueSensor Pod Agent","product_brain",  "IDLE",        "PRODUCT_CAMPUS", None,                 None,      None),
+            ("Central Supervisor #01","supervisor",      "PLANNING",    "SUPERVISOR",     "supervisor_console", None,      None),
         ]
 
         for w_name, w_type, w_status, w_zone, w_station, w_source, w_url in initial_fleet:

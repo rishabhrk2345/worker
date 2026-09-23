@@ -7,7 +7,7 @@ import { getZoneConfig } from '../ZoneRegistry';
 import { useSourceStore } from '../../../lib/store/sourceStore';
 
 const PLATFORM_ICONS = [
-  'reddit', 'twitter', 'linkedin', 'youtube',
+  'youtube', 'reddit', 'x', 'linkedin',
   'instagram', 'facebook', 'threads', 'tiktok',
   'news', 'rss', 'forums', 'reviews', 'web', 'search', 'podcasts',
 ];

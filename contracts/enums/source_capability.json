@@ -33,10 +33,10 @@
     "RATE_LIMIT_AWARE":  "Connector has built-in rate limit tracking and will throw RateLimitExceeded"
   },
   "x-platform-capabilities": {
+    "youtube":   ["SEARCH", "FETCH", "COMMENTS", "RATE_LIMIT_AWARE"],
     "reddit":    ["SEARCH", "FETCH", "COMMENTS", "REPLIES", "INCREMENTAL_SYNC", "RATE_LIMIT_AWARE"],
     "x":         ["SEARCH", "FETCH", "RATE_LIMIT_AWARE"],
     "linkedin":  ["SEARCH", "FETCH", "PUBLIC_ENTITY", "RATE_LIMIT_AWARE"],
-    "youtube":   ["SEARCH", "FETCH", "COMMENTS", "RATE_LIMIT_AWARE"],
     "news":      ["SEARCH", "FETCH", "INCREMENTAL_SYNC"],
     "rss":       ["FETCH", "INCREMENTAL_SYNC"],
     "web":       ["FETCH", "BROWSER_RENDER", "HISTORICAL_SEARCH"],

@@ -77,6 +77,7 @@ class Settings(BaseSettings):
     EMBEDDING_DIMENSION: int = 1536
 
     # Source connector keys
+    YOUTUBE_API_KEY: Optional[str] = None   # YouTube Data API v3 (optional — Invidious fallback used if blank)
     SERPAPI_KEY: Optional[str] = None
     NEWSAPI_KEY: Optional[str] = None
     REDDIT_CLIENT_ID: Optional[str] = None

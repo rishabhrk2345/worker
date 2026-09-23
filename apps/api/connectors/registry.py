@@ -45,7 +45,8 @@ def build_connector(platform: str) -> Optional[BaseSourceConnector]:
 
 # Auto-import connectors to trigger registration
 def _auto_import() -> None:
-    from . import website, rss, search, reddit, news  # noqa: F401
+    # youtube is first — primary discovery source
+    from . import youtube, website, rss, search, reddit, news  # noqa: F401
 
 
 _auto_import()
