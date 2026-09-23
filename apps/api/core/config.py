@@ -4,13 +4,26 @@ apps/api/core/config.py
 Authoritative configuration settings loaded from environment variables.
 """
 
+from pathlib import Path
 from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 
+# Resolve .env from the repo root regardless of working directory.
+# Walks up from this file (apps/api/core/) until it finds a .env file
+# or bottoms out at the filesystem root.
+def _find_env_file() -> str:
+    here = Path(__file__).resolve().parent
+    for directory in [here, *here.parents]:
+        candidate = directory / ".env"
+        if candidate.exists():
+            return str(candidate)
+    return ".env"  # fallback — let pydantic-settings handle missing gracefully
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_find_env_file(),
         env_file_encoding="utf-8",
         extra="ignore"
     )

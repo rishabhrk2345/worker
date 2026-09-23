@@ -67,9 +67,12 @@ def upgrade() -> None:
         return  # SQLite test runs skip RLS (it is a PG feature)
 
     # Helper GUC used by all policies: app.current_org_id
-    op.execute("CREATE OR REPLACE FUNCTION current_org_id() TEXT AS $$ "
-               "SELECT current_setting('app.current_org_id', true) "
-               "$$ LANGUAGE sql STABLE")
+    op.execute(
+        "CREATE OR REPLACE FUNCTION current_org_id() "
+        "RETURNS TEXT AS $$ "
+        "SELECT current_setting('app.current_org_id', true) "
+        "$$ LANGUAGE sql STABLE"
+    )
 
     for table in ORG_SCOPED_TABLES:
         op.execute(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY")
