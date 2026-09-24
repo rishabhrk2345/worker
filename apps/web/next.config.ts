@@ -15,8 +15,8 @@ const nextConfig: NextConfig = {
   },
   // Env vars exposed to client
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8010',
-    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:8010',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000',
+    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:8000',
     NEXT_PUBLIC_SIMULATION_MODE: process.env.SIMULATION_MODE ?? 'true',
   },
 };

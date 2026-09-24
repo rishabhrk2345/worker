@@ -79,7 +79,7 @@ test-frontend:
 
 portfolio-test:
 	@echo "Running portfolio matching smoke test..."
-	curl -s -X POST http://localhost:8000/api/intelligence/match \
+	curl -s -X POST http://localhost:8010/api/intelligence/match \
 	  -H "Content-Type: application/json" \
 	  -d '{"problem_statement": "My Facebook ROAS does not match Stripe revenue", "intent_score": 0.9}' \
 	  | python -m json.tool

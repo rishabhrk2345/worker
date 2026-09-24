@@ -3,7 +3,7 @@
  * MissionDetail — Mission status panel with progress bar and worker roster.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMissionStore } from '../../lib/store/missionStore';
 import { useWorkerStore } from '../../lib/store/workerStore';
 import { useEventStore } from '../../lib/store/eventStore';
@@ -24,11 +24,17 @@ export function MissionDetail() {
   const selectedId = useUIStore((s) => s.selectedMissionId);
   const closePanel = useUIStore((s) => s.closePanel);
   const mission = useMissionStore((s) => (selectedId ? s.missions.get(selectedId) : null));
-  const workers = useWorkerStore((s) =>
-    Array.from(s.workers.values()).filter((w) => w.currentMissionId === selectedId)
+  const allWorkers = useWorkerStore((s) => s.workers);
+  const allEvents = useEventStore((s) => s.events);
+
+  const workers = useMemo(
+    () => (selectedId ? Array.from(allWorkers.values()).filter((w) => w.currentMissionId === selectedId) : []),
+    [allWorkers, selectedId]
   );
-  const events = useEventStore((s) =>
-    selectedId ? s.getByMission(selectedId) : []
+
+  const events = useMemo(
+    () => (selectedId ? allEvents.filter((e) => e.missionId === selectedId) : []),
+    [allEvents, selectedId]
   );
 
   const [loading, setLoading] = useState(false);

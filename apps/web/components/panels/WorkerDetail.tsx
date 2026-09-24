@@ -4,6 +4,7 @@
  * Shows: identity, status, current task, zone, metrics, event history.
  */
 
+import { useMemo } from 'react';
 import { useWorkerStore } from '../../lib/store/workerStore';
 import { useEventStore } from '../../lib/store/eventStore';
 import { useUIStore } from '../../lib/store/uiStore';
@@ -41,9 +42,16 @@ export function WorkerDetail() {
   const selectedId = useUIStore((s) => s.selectedWorkerId);
   const closePanel = useUIStore((s) => s.closePanel);
   const worker = useWorkerStore((s) => (selectedId ? s.workers.get(selectedId) : null));
-  const events = useEventStore((s) =>
-    selectedId ? s.getByWorker(selectedId, 20) : []
-  );
+  const allEvents = useEventStore((s) => s.events);
+
+  const recentEvents = useMemo(() => {
+    if (!selectedId) return [];
+    return allEvents
+      .filter((ev) => ev.workerId === selectedId)
+      .slice(-20)
+      .reverse()
+      .slice(0, 15);
+  }, [allEvents, selectedId]);
 
   if (!worker) {
     return (
@@ -54,7 +62,6 @@ export function WorkerDetail() {
   }
 
   const color = STATE_COLORS[worker.status] ?? '#64748b';
-  const recentEvents = [...events].reverse().slice(0, 15);
 
   return (
     <div className="glass-panel rounded-lg flex flex-col overflow-hidden max-h-full">
