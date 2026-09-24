@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ZonePlatform } from './ZonePlatform';
@@ -48,7 +48,8 @@ function SourcePanel({ index, total, mode }: { index: number; total: number; mod
 
 export function SourceObservatoryZone({ children }: { children?: React.ReactNode }) {
   const cfg = getZoneConfig('SOURCE_OBSERVATORY');
-  const sources = useSourceStore((s) => Array.from(s.sources.values()).slice(0, 15));
+  const sourcesMap = useSourceStore((s) => s.sources);
+  const sources = useMemo(() => Array.from(sourcesMap.values()).slice(0, 15), [sourcesMap]);
 
   return (
     <ZonePlatform config={cfg}>

@@ -6,6 +6,7 @@ Authoritative configuration settings loaded from environment variables.
 
 from pathlib import Path
 from typing import List, Optional
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 
@@ -21,9 +22,17 @@ def _find_env_file() -> str:
     return ".env"  # fallback — let pydantic-settings handle missing gracefully
 
 
+_ENV_FILE = _find_env_file()
+# pydantic-settings reads _ENV_FILE into the Settings object below, but does
+# NOT populate os.environ. Connectors (threads.py, reddit.py, youtube.py, …)
+# read their fallback credentials via plain os.getenv(), so it must also be
+# loaded into the process environment here.
+load_dotenv(_ENV_FILE, override=False)
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=_find_env_file(),
+        env_file=_ENV_FILE,
         env_file_encoding="utf-8",
         extra="ignore"
     )

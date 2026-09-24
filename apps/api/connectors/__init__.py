@@ -5,7 +5,7 @@ from .rate_limiter import get_rate_limit_manager
 from .health_monitor import get_health_monitor
 # Import connectors to fire their @register() decorators
 # youtube is first — it is the primary discovery source
-from . import youtube, website, rss, search, reddit, news  # noqa: F401
+from . import youtube, website, rss, search, reddit, news, threads  # noqa: F401
 
 __all__ = [
     "BaseSourceConnector", "SearchResult", "FetchResult", "Comment", "HealthStatus",

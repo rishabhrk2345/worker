@@ -243,7 +243,7 @@ const ZONE_MAP = new Map<LogicalZone, ZoneConfig>(
 );
 
 export function getZoneConfig(zone: LogicalZone): ZoneConfig {
-  const cfg = ZONE_MAP.get(zone);
+  const cfg = ZONE_MAP.get(zone) ?? ZONE_MAP.get('SUPERVISOR');
   if (!cfg) throw new Error(`Unknown logical zone: ${zone}`);
   return cfg;
 }

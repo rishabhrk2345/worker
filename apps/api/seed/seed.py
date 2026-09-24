@@ -336,7 +336,7 @@ async def seed_database():
             ("linkedin", "LinkedIn", "Professional Social", ["SEARCH", "FETCH", "PUBLIC_ENTITY", "RATE_LIMIT_AWARE"], "https://linkedin.com", 30),
             ("instagram", "Instagram", "Social Media", ["SEARCH", "FETCH", "RATE_LIMIT_AWARE"], "https://instagram.com", 30),
             ("facebook", "Facebook Groups & Pages", "Social Communities", ["SEARCH", "FETCH", "COMMENTS"], "https://facebook.com", 25),
-            ("threads", "Threads", "Social", ["SEARCH", "FETCH"], "https://threads.net", 40),
+            ("threads", "Threads", "Social", ["SEARCH", "FETCH", "REPLIES", "RATE_LIMIT_AWARE"], "https://threads.net", 40),
             ("tiktok", "TikTok", "Short Video Trends", ["SEARCH", "FETCH"], "https://tiktok.com", 35),
             ("news", "Global Tech News", "News & Media", ["SEARCH", "FETCH", "INCREMENTAL_SYNC"], "https://news.ycombinator.com", 100),
             ("rss", "Industry RSS Feeds", "Feeds", ["FETCH", "INCREMENTAL_SYNC"], "https://rss.feedspot.com", 120),

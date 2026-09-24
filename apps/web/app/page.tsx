@@ -17,6 +17,7 @@
  */
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRealtimeSync } from '../lib/ws/useRealtimeSync';
 import { useUIStore } from '../lib/store/uiStore';
@@ -87,6 +88,12 @@ export default function CommandCenterPage() {
           >
             🔬 Why?
           </button>
+          <Link
+            href="/admin/sources"
+            className="px-3 py-1.5 rounded text-xs font-medium bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700"
+          >
+            🔌 Sources
+          </Link>
         </div>
       </div>
 

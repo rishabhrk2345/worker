@@ -4,7 +4,7 @@
  * Clicking a worker selects it and switches camera to WORKER_FOLLOW.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useWorkerStore, WorkerSnapshot } from '../../lib/store/workerStore';
 import { useUIStore } from '../../lib/store/uiStore';
 import { LogicalZone } from '../../lib/types/generated/enums';
@@ -87,7 +87,8 @@ function WorkerRow({ worker }: { worker: WorkerSnapshot }) {
 }
 
 export function WorkerList() {
-  const workers = useWorkerStore((s) => Array.from(s.workers.values()));
+  const workersMap = useWorkerStore((s) => s.workers);
+  const workers = useMemo(() => Array.from(workersMap.values()), [workersMap]);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
 
   // Group by zone

@@ -22,6 +22,9 @@ async function apiFetch<T>(
     const text = await res.text().catch(() => '');
     throw new Error(`API ${options.method ?? 'GET'} ${path} → ${res.status}: ${text}`);
   }
+  if (res.status === 204) {
+    return undefined as T;
+  }
   return res.json() as Promise<T>;
 }
 
@@ -135,6 +138,76 @@ export const apiGetProducts = () =>
 export const apiGetProduct = (id: string) =>
   apiFetch<import('../store/productStore').Product & { brain: import('../store/productStore').ProductBrain }>(
     `/api/products/${id}`
+  );
+
+// ─── Sources (crawler connectors & credentials) ────────────────────────────
+
+export interface SourceCatalogEntry {
+  id: string;
+  name: string;
+  platform: string;
+  description: string;
+  capabilities: string[];
+  base_url: string | null;
+  requires_auth: boolean;
+  default_rate_limit_per_min: number;
+}
+
+export interface SourceConnectionDetail {
+  id: string;
+  source_id: string;
+  name: string;
+  platform: string;
+  alias: string;
+  status: string;
+  rate_limit_per_min: number;
+  has_credentials: boolean;
+  capabilities: string[];
+  last_synced_at: string | null;
+  health: {
+    mode: string;
+    items_per_hour: number;
+    success_rate: number;
+    last_error: string | null;
+  } | null;
+}
+
+export const apiGetSourceCatalog = () =>
+  apiFetch<SourceCatalogEntry[]>('/api/sources/catalog');
+
+export const apiGetSourceConnections = () =>
+  apiFetch<SourceConnectionDetail[]>('/api/sources');
+
+export const apiCreateSourceConnection = (
+  sourceId: string,
+  body: { alias: string; credentials: Record<string, string>; rate_limit_per_min?: number }
+) =>
+  apiFetch<SourceConnectionDetail>(`/api/sources/${sourceId}/connections`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+
+export const apiUpdateSourceConnection = (
+  connectionId: string,
+  body: Partial<{
+    alias: string;
+    credentials: Record<string, string>;
+    status: string;
+    rate_limit_per_min: number;
+  }>
+) =>
+  apiFetch<SourceConnectionDetail>(`/api/sources/connections/${connectionId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+
+export const apiDeleteSourceConnection = (connectionId: string) =>
+  apiFetch<void>(`/api/sources/connections/${connectionId}`, { method: 'DELETE' });
+
+export const apiTestSourceConnection = (connectionId: string) =>
+  apiFetch<{ healthy: boolean; mode: string; last_error: string | null }>(
+    `/api/sources/connections/${connectionId}/test`,
+    { method: 'POST' }
   );
 
 // ─── Health ─────────────────────────────────────────────────────────────────

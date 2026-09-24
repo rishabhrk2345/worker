@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -60,7 +60,8 @@ function ProductPod({ product, position, color }: {
 
 export function ProductCampusZone({ children }: { children?: React.ReactNode }) {
   const cfg = getZoneConfig('PRODUCT_CAMPUS');
-  const products = useProductStore((s) => Array.from(s.products.values()).slice(0, 5));
+  const productsMap = useProductStore((s) => s.products);
+  const products = useMemo(() => Array.from(productsMap.values()).slice(0, 5), [productsMap]);
 
   return (
     <ZonePlatform config={cfg}>

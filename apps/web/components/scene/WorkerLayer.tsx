@@ -25,7 +25,8 @@ const LOD_FULL_DIST = 40;
 const LOD_SIMPLE_DIST = 80;
 
 export function WorkerLayer() {
-  const workers = useWorkerStore((s) => Array.from(s.workers.values()));
+  const workersMap = useWorkerStore((s) => s.workers);
+  const workers = useMemo(() => Array.from(workersMap.values()), [workersMap]);
   const { camera } = useThree();
 
   // Separate workers into LOD buckets
